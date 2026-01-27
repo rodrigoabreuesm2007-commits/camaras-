@@ -4,7 +4,7 @@ import re
 import os
 from collections import Counter
 
-# --- CONFIGURAÇÕES --- ggggggg ---fffff
+# --- CONFIGURAÇÕES --- 
 PASTA_FOTOS = r"C:\Users\Utilizador\rodrigo"  # pasta onde as fotos do Raspberry Pi são salvas
 reader = easyocr.Reader(['en'], gpu=False)    # OCR em CPU
 MAX_RECENT = 10
