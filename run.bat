@@ -1,29 +1,31 @@
 @echo off
 echo ===============================
-echo LEITOR DE MATRICULAS - SETUP
+echo LEITOR DE MATRICULAS - AUTOMATICO
 echo ===============================
 
-REM garantir que estamos na pasta certa
+REM --- Ir para a pasta do .bat ---
 cd /d %~dp0
 
-REM verificar se o Python existe
-python --version
-IF ERRORLEVEL 1 (
-    echo Python nao encontrado.
-    echo Instala o Python primeiro.
-    pause
-    exit
-)
+REM --- Baixar foto do Raspberry Pi ---
+echo Baixando foto do Raspberry Pi...
+scp raspcam@10.1.26.181:/home/raspcam/matriculas/matricula.jpg "C:\Users\Utilizador\rodrigo\matricula.jpg"
 
+REM --- Instalar bibliotecas (uma vez, se necessário) ---
 echo -------------------------------
 echo Instalando bibliotecas...
 echo -------------------------------
 pip install --upgrade pip
 pip install -r requirements.txt
 
-echo -------------------------------
-echo Executando o programa...
-echo -------------------------------
+REM --- Ativar ambiente virtual ---
+echo Ativando ambiente virtual...
+call venv\Scripts\activate.bat
+
+REM --- Executar script Python ---
+echo Executando leitura de matricula...
 python ler_matricula_imagem.py
 
+echo ===============================
+echo FIM
+echo ===============================
 pause
