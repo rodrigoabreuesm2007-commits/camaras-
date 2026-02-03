@@ -1,73 +1,71 @@
 import cv2
 import easyocr
+import numpy as np
+import requests
 import re
-import os
 from collections import Counter
 
-# --- CONFIGURAÇÕES --- ver 2
-PASTA_FOTOS = r"C:\Users\Utilizador\rodrigo"  # pasta onde as fotos do Raspberry Pi são salvas
-reader = easyocr.Reader(['en'], gpu=False)    # OCR em CPU
-MAX_RECENT = 10
-recent_plates = []
+# ================= CONFIG =================
 
-# Função para limpar texto para formato de matrícula
+IMAGE_URL = "http://10.1.31.97:8000/ultima.jpg"
+CONF_MIN = 0.4
+MAX_RECENT = 10
+
+reader = easyocr.Reader(['en'], gpu=False)
+historico = []
+
+# ================= FUNÇÕES =================
+
 def limpar(texto):
     return re.sub(r'[^A-Z0-9]', '', texto.upper())
 
-# Função para pegar a foto mais recente da pasta
-def pegar_ultima_foto(pasta):
-    arquivos = [os.path.join(pasta, f) for f in os.listdir(pasta) if f.lower().endswith(('.jpg', '.png', '.jpeg'))]
-    if not arquivos:
+def obter_imagem(url):
+    r = requests.get(url, timeout=5)
+    if r.status_code != 200:
         return None
-    return max(arquivos, key=os.path.getmtime)
+    img_array = np.frombuffer(r.content, np.uint8)
+    return cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
-# --- PROGRAMA PRINCIPAL ---
-ultima_foto = pegar_ultima_foto(PASTA_FOTOS)
+# ================= MAIN =================
 
-if not ultima_foto:
-    print("Nenhuma foto encontrada na pasta.")
-    exit()
+print("🔄 A obter imagem do Raspberry Pi...")
+img = obter_imagem(IMAGE_URL)
 
-print(f"Abrindo imagem: {ultima_foto}")
-img = cv2.imread(ultima_foto)
 if img is None:
-    print("Erro ao abrir a imagem.")
+    print("❌ ERRO: não foi possível obter a imagem")
     exit()
+
+cv2.imshow("Imagem recebida", img)
+cv2.waitKey(500)
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-print("A executar OCR...")
+print("🔍 A executar OCR...")
 
 results = reader.readtext(gray)
 
-if not results:
-    print("Nenhuma matrícula detectada.")
-else:
-    placas_detectadas = []
+placas = []
 
-    for (bbox, text, prob) in results:
-        if prob > 0.4 and len(text) >= 5:
-            plate = limpar(text)
-            placas_detectadas.append(plate)
-            recent_plates.append(plate)
-            if len(recent_plates) > MAX_RECENT:
-                recent_plates.pop(0)
+for (bbox, text, prob) in results:
+    if prob >= CONF_MIN:
+        plate = limpar(text)
+        if 6 <= len(plate) <= 8:
+            placas.append(plate)
+            historico.append(plate)
+            if len(historico) > MAX_RECENT:
+                historico.pop(0)
 
-    if placas_detectadas:
-        # pegar a matrícula mais frequente
-        last_plate = Counter(recent_plates).most_common(1)[0][0]
-        print(f"✅ MATRÍCULA DETECTADA: {last_plate}")
-
-        # desenhar todas as placas detectadas na imagem
-        for (bbox, text, prob) in results:
             x1, y1 = map(int, bbox[0])
             x2, y2 = map(int, bbox[2])
             cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.putText(img, limpar(text), (x1, y1 - 10),
+            cv2.putText(img, plate, (x1, y1 - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
-        cv2.imshow("Matrículas Detectadas", img)
-        cv2.waitKey(0)
-    else:
-        print("Nenhuma matrícula válida detectada.")
+if placas:
+    final = Counter(historico).most_common(1)[0][0]
+    print(f"✅ MATRÍCULA DETECTADA: {final}")
+else:
+    print("⚠️ Nenhuma matrícula reconhecida")
 
+cv2.imshow("Resultado OCR", img)
+cv2.waitKey(0)
 cv2.destroyAllWindows()
