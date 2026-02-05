@@ -1,6 +1,10 @@
 # Ajuda
 
-sdsagdkasdhas dsadaskjdhas
+📦 PASSO 1 — FAZER DOWNLOAD (em casa ou num PC normal)
+
+👉 Descarrega Python portátil (oficial):
+
+🔗 https://www.python.org/ftp/python/3.11.8/python-3.11.8-embed-amd64.zip
 
 ```
 
