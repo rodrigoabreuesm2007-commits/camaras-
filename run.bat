@@ -1,31 +1,49 @@
 @echo off
-echo ===============================
-echo LEITOR DE MATRICULAS - AUTOMATICO
-echo ===============================
-
-REM --- Ir para a pasta do .bat ---
-cd /d %~dp0
-
-REM --- Baixar foto do Raspberry Pi ---
-echo Baixando foto do Raspberry Pi...
-scp raspcam@10.1.26.181:/home/raspcam/matriculas/matricula.jpg "C:\Users\Utilizador\rodrigo\matricula.jpg"
-
-REM --- Instalar bibliotecas (uma vez, se necessário) ---
-echo -------------------------------
-echo Instalando bibliotecas...
-echo -------------------------------
-pip install --upgrade pip
-pip install -r requirements.txt
-
-REM --- Ativar ambiente virtual ---
-echo Ativando ambiente virtual...
-call venv\Scripts\activate.bat
-
-REM --- Executar script Python ---
-echo Executando leitura de matricula...
-python ler_matricula_imagem.py
+title OCR MATRICULAS - AUTO
+set BASE=%~dp0
 
 echo ===============================
-echo FIM
+echo   OCR MATRICULAS - AUTO SETUP
 echo ===============================
+echo.
+
+REM Criar pasta python se nao existir
+if not exist "%BASE%python" (
+    echo [1/5] A fazer download do Python 3.11 portatil...
+    powershell -Command ^
+     "Invoke-WebRequest https://www.python.org/ftp/python/3.11.8/python-3.11.8-embed-amd64.zip -OutFile python.zip"
+
+    mkdir python
+    powershell -Command ^
+     "Expand-Archive python.zip python"
+
+    del python.zip
+)
+
+REM Corrigir python311._pth
+echo [2/5] A configurar Python...
+(
+echo .
+echo Lib
+echo Lib\site-packages
+echo import site
+) > "%BASE%python\python311._pth"
+
+set PYTHON=%BASE%python\python.exe
+
+echo.
+echo [3/5] A instalar pip...
+%PYTHON% -m ensurepip --default-pip
+
+echo.
+echo [4/5] A instalar bibliotecas (pode demorar)...
+%PYTHON% -m pip install --upgrade pip
+%PYTHON% -m pip install -r "%BASE%app\requirements.txt"
+
+echo.
+echo [5/5] A executar programa...
+cd /d "%BASE%app"
+%PYTHON% ler_matricula_ip.py
+
+echo.
 pause
