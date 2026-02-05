@@ -1,5 +1,8 @@
 easyocr
 opencv-python
 numpy
+requests
 torch
 torchvision
+torchaudio
+certifi
