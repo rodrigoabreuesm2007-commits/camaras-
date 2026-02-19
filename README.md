@@ -4,7 +4,7 @@
 
 👉 Descarrega Python portátil (oficial):
 
-🔗 https://www.python.org/ftp/python/3.11.8/python-3.11.8-embed-amd64.zip
+🔗[ https://www.python.org/ftp/python/3.11.8/python-3.11.8-embed-amd64.zip](https://www.python.org/ftp/python/3.10.10/python-3.10.10-amd64.exe)
 
 ```
 
