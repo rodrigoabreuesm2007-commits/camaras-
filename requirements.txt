@@ -6,3 +6,6 @@ torch
 torchvision
 torchaudio
 certifi
+py -m pip install opencv-python
+py -m pip install easyocr
+py -m pip install numpy
