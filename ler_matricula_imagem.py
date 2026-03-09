@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 # ==========================
-# CONFIGURAÇÃO  ............
+# CONFIGURAÇÃO  
 # ==========================
 RTSP_URL = "rtsp://admin:ESMesm123@128.128.1.113:554/stream1"
 reader = easyocr.Reader(['en'], gpu=False)
@@ -25,6 +25,7 @@ def limpar(texto):
 
 def validar_matricula(placa):
     return re.fullmatch(r"[A-Z0-9]{6,7}", placa) is not None
+
 
 # ==========================
 # THREAD DE OCR
@@ -104,6 +105,7 @@ class OCRThread(threading.Thread):
             if placas_detectadas:
                 last_plate = Counter(recent_plates).most_common(1)[0][0]
                 print(f"✅ MATRÍCULA: {last_plate}")
+                
 
 # ==========================
 # CAPTURA RTSP
