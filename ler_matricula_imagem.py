@@ -7,7 +7,7 @@ import time
 import numpy as np
 
 # ==========================
-# CONFIGURAÇÃO
+# CONFIGURAÇÃO wewuwaeuwa
 # ==========================
 RTSP_URL = "rtsp://admin:ESMesm123@128.128.1.113:554/stream1"
 reader = easyocr.Reader(['en'], gpu=False)
