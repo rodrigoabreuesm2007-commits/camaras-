@@ -7,5 +7,8 @@ torchvision
 torchaudio
 certifi
 py -m pip install opencv-python
-py -m pip install easyocr
 py -m pip install numpy
+py -m pip install easyocr
+py -m pip install torch torchvision torchaudio
+py -m pip install pillow
+py -m pip install opencv-contrib-python
