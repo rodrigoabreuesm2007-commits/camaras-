@@ -11,7 +11,7 @@ def corrigir_pelo_padrao(texto):
 
     # Dicionários de conversão
     para_num = {'O': '0', 'D': '0', 'Q': '0', 'I': '1', 'L': '1', 'Z': '2', 'S': '5', 'G': '6', 'B': '8'}
-    para_let = {'0': 'O', '1': 'I', '2': 'Z', '5': 'S', '8': 'B'}
+    para_let = {'0': 'O', '1': 'I', '2': 'Z', '5': 'S', '8': 'B'} #adicionar as mesmas combinações de para_num: '0': 'D', ...
 
     # Definição dos padrões: L = Letra, N = Número
     padroes = [
