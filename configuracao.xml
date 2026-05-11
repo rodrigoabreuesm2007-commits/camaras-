@@ -1,7 +1,7 @@
 <configuracoes>
-    <constante nome="PI_IP">192.168.1.69</constante>
+    <constante nome="PI_IP">128.128.1.37</constante>
     <constante nome="PORTA">65432</constante>
-    <constante nome="CAM_IP">192.168.1.201</constante>
+    <constante nome="CAM_IP">128.128.1.200</constante>
     <constante nome="API_VALIDA">http://matriculas.alunos.esmonserrate.org/public/api/matriculas/valida/</constante>
-    <constante nome="RTSP_URL">rtsp://admin:ESMesm123@192.168.1.201:554/stream1</constante>
+    <constante nome="RTSP_URL">rtsp://admin:ESMesm123@128.128.1.200:554/stream1</constante>
 </configuracoes>
